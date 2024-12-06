@@ -1,0 +1,56 @@
+/* Body Background */
+body {
+    background: url('https://source.unsplash.com/1600x900/?travel,holiday') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Card Styling */
+  .card {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 20px;
+  }
+  
+  /* Form Labels and Buttons */
+  .form-label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .btn {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+  }
+  
+  /* Links */
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Feedback Messages */
+  .invalid-feedback {
+    font-size: 0.85rem;
+  }
+  
+  /* Responsive Design Adjustments */
+  @media (max-width: 768px) {
+    .card {
+      padding: 15px;
+    }
+  }
