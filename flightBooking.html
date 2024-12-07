@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Booking System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .booking-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: 50px;
+        }
+        .trip-type-btn {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .form-control, .btn {
+            border-radius: 5px;
+        }
+        #searchResults {
+            margin-top: 20px;
+        }
+        .flight-card {
+            margin-bottom: 15px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="booking-container">
+                    <h2 class="text-center mb-4">Travel Booking System</h2>
+                    
+                    <!-- Trip Type Selection -->
+                    <div class="mb-3 text-center">
+                        <button class="btn btn-outline-primary trip-type-btn active" id="oneWayBtn">One Way</button>
+                        <button class="btn btn-outline-primary trip-type-btn" id="roundTripBtn">Round Trip</button>
+                    </div>
+
+                    <!-- Booking Form -->
+                    <form id="bookingForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="fromLocation" class="form-label">From</label>
+                                <select class="form-control" id="fromLocation" required>
+                                    <option value="">Select Origin</option>
+                                    <option value="Varanasi">Varanasi</option>
+                                    <option value="Mumbai">Mumbai</option>
+                                    <option value="New Delhi">New Delhi</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="toLocation" class="form-label">To</label>
+                                <select class="form-control" id="toLocation" required>
+                                    <option value="">Select Destination</option>
+                                    <option value="Mumbai">Mumbai</option>
+                                    <option value="Patna">Patna</option>
+                                    <option value="New Delhi">New Delhi</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="departDate" class="form-label">Departure Date</label>
+                                <input type="date" class="form-control" id="departDate" required>
+                            </div>
+                            <div class="col-md-6 mb-3" id="returnDateContainer" style="display:none;">
+                                <label for="returnDate" class="form-label">Return Date</label>
+                                <input type="date" class="form-control" id="returnDate">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="passengers" class="form-label">Passengers</label>
+                                <select class="form-control" id="passengers">
+                                    <option value="1">1 Passenger</option>
+                                    <option value="2">2 Passengers</option>
+                                    <option value="3">3 Passengers</option>
+                                    <option value="4">4 Passengers</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="travelClass" class="form-label">Travel Class</label>
+                                <select class="form-control" id="travelClass">
+                                    <option value="economy">Economy</option>
+                                    <option value="business">Business</option>
+                                    <option value="first">First Class</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">Search Flights</button>
+                        </div>
+                    </form>
+
+                    <!-- Search Results -->
+                    <div id="searchResults" style="display:none;">
+                        <h3 class="mt-4 mb-3">Available Flights</h3>
+                        <div id="flightList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const oneWayBtn = document.getElementById('oneWayBtn');
+            const roundTripBtn = document.getElementById('roundTripBtn');
+            const returnDateContainer = document.getElementById('returnDateContainer');
+            const bookingForm = document.getElementById('bookingForm');
+            const searchResults = document.getElementById('searchResults');
+            const flightList = document.getElementById('flightList');
+
+            // Trip Type Toggle
+            oneWayBtn.addEventListener('click', function() {
+                oneWayBtn.classList.add('active');
+                roundTripBtn.classList.remove('active');
+                returnDateContainer.style.display = 'none';
+                document.getElementById('returnDate').required = false;
+            });
+
+            roundTripBtn.addEventListener('click', function() {
+                roundTripBtn.classList.add('active');
+                oneWayBtn.classList.remove('active');
+                returnDateContainer.style.display = 'block';
+                document.getElementById('returnDate').required = true;
+            });
+
+            // Form Submission Handler
+            bookingForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Simulate flight search
+                const fromLocation = document.getElementById('fromLocation').value;
+                const toLocation = document.getElementById('toLocation').value;
+                const departDate = document.getElementById('departDate').value;
+                const passengers = document.getElementById('passengers').value;
+                const travelClass = document.getElementById('travelClass').value;
+
+                // Mock flight data generation
+                const flights = generateFlightResults(fromLocation, toLocation, departDate, passengers, travelClass);
+                
+                // Display results
+                displayFlightResults(flights);
+            });
+
+            function generateFlightResults(from, to, date, passengers, travelClass) {
+                // This is a mock function to generate sample flight data
+                return [
+                    {
+                        airline: 'Sky Travelers',
+                        flightNumber: 'ST' + Math.floor(Math.random() * 1000),
+                        departureTime: '08:00 AM',
+                        arrivalTime: '10:30 AM',
+                        price: travelClass === 'economy' ? 199 : travelClass === 'business' ? 499 : 799
+                    },
+                    {
+                        airline: 'Global Wings',
+                        flightNumber: 'GW' + Math.floor(Math.random() * 1000),
+                        departureTime: '11:15 AM',
+                        arrivalTime: '01:45 PM',
+                        price: travelClass === 'economy' ? 229 : travelClass === 'business' ? 549 : 849
+                    }
+                ];
+            }
+
+            function displayFlightResults(flights) {
+                searchResults.style.display = 'block';
+                flightList.innerHTML = ''; // Clear previous results
+
+                flights.forEach(flight => {
+                    const flightCard = document.createElement('div');
+                    flightCard.classList.add('flight-card');
+                    flightCard.innerHTML = `
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5>${flight.airline} - ${flight.flightNumber}</h5>
+                                <p>Departure: ${flight.departureTime} | Arrival: ${flight.arrivalTime}</p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <h4 class="text-primary">$${flight.price}</h4>
+                                <button class="btn btn-success btn-sm">Book Now</button>
+                            </div>
+                        </div>
+                    `;
+                    flightList.appendChild(flightCard);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Booking System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .hotel-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hotel-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .hotel-image {
+            height: 250px;
+            object-fit: cover;
+        }
+        .amenity-badge {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .rating-star {
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">
+                    <i class="bi bi-building me-2"></i> Hotel Booking System
+                </h3>
+            </div>
+            <div class="card-body">
+                <form id="searchForm">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="bi bi-geo-alt me-2"></i> Destination
+                            </label>
+                            <select class="form-select" id="destinationSelect">
+                                <option selected>Select Destination</option>
+                                <option>New Delhi</option>
+                                <option>Mumbai</option>
+                                <option>Kasol</option>
+                                <option>Manali</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="bi bi-calendar-check me-2"></i> Check-in
+                            </label>
+                            <input type="date" class="form-control" id="checkInDate">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="bi bi-calendar-x me-2"></i> Check-out
+                            </label>
+                            <input type="date" class="form-control" id="checkOutDate">
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="bi bi-people me-2"></i> Adults
+                            </label>
+                            <input type="number" class="form-control" id="adultsCount" 
+                                   min="1" max="10" value="2">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="bi bi-people me-2"></i> Children
+                            </label>
+                            <input type="number" class="form-control" id="childrenCount" 
+                                   min="0" max="10" value="0">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">
+                                <i class="bi bi-door-open me-2"></i> Rooms
+                            </label>
+                            <input type="number" class="form-control" id="roomsCount" 
+                                   min="1" max="5" value="1">
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2">
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="bi bi-cash-coin me-2"></i> Price Range
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="minPrice" placeholder="Min">
+                                <span class="input-group-text">to</span>
+                                <input type="number" class="form-control" id="maxPrice" placeholder="Max">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">
+                                <i class="bi bi-filter me-2"></i> Amenities
+                            </label>
+                            <select multiple class="form-select" id="amenitiesSelect">
+                                <option>Pool</option>
+                                <option>Spa</option>
+                                <option>Fitness Center</option>
+                                <option>Free WiFi</option>
+                                <option>Restaurant</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="button" class="btn btn-primary" id="searchHotels">
+                            <i class="bi bi-search me-2"></i> Search Hotels
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Hotels Results Container -->
+        <div id="hotelsContainer" class="row g-4">
+            <!-- Hotel results will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Dependencies -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Sample Hotel Data
+        const HOTELS = [
+            {
+                id: 1,
+                name: "Luxury Beachfront Resort",
+                location: "Miami, FL",
+                rating: 4.8,
+                pricePerNight: 350,
+                image: "https://via.placeholder.com/400x250?text=Hotel+1",
+                amenities: ["Pool", "Spa", "Beach Access", "Free WiFi"],
+                rooms: [
+                    { type: "Standard", capacity: 2, price: 350 },
+                    { type: "Deluxe", capacity: 3, price: 450 },
+                    { type: "Suite", capacity: 4, price: 600 }
+                ]
+            },
+            {
+                id: 2,
+                name: "Urban Luxury Hotel",
+                location: "New York, NY",
+                rating: 4.5,
+                pricePerNight: 450,
+                image: "https://via.placeholder.com/400x250?text=Hotel+2",
+                amenities: ["Fitness Center", "Restaurant", "Room Service", "Free WiFi"],
+                rooms: [
+                    { type: "Standard", capacity: 2, price: 450 },
+                    { type: "Executive", capacity: 3, price: 550 },
+                    { type: "Penthouse", capacity: 4, price: 750 }
+                ]
+            }
+        ];
+
+        // DOM Elements
+        const destinationSelect = document.getElementById('destinationSelect');
+        const checkInDate = document.getElementById('checkInDate');
+        const checkOutDate = document.getElementById('checkOutDate');
+        const adultsCount = document.getElementById('adultsCount');
+        const childrenCount = document.getElementById('childrenCount');
+        const roomsCount = document.getElementById('roomsCount');
+        const minPrice = document.getElementById('minPrice');
+        const maxPrice = document.getElementById('maxPrice');
+        const amenitiesSelect = document.getElementById('amenitiesSelect');
+        const searchHotelsBtn = document.getElementById('searchHotels');
+        const hotelsContainer = document.getElementById('hotelsContainer');
+
+        // Search Hotels Function
+        function searchHotels() {
+            // Clear previous results
+            hotelsContainer.innerHTML = '';
+
+            // Filter hotels based on search criteria
+            const filteredHotels = HOTELS.filter(hotel => {
+                // Location filter
+                const locationMatch = destinationSelect.value === 'Select Destination' || 
+                                      hotel.location.includes(destinationSelect.value);
+
+                // Price filter
+                const minPriceValue = minPrice.value ? parseFloat(minPrice.value) : 0;
+                const maxPriceValue = maxPrice.value ? parseFloat(maxPrice.value) : Infinity;
+                const priceMatch = hotel.pricePerNight >= minPriceValue && 
+                                   hotel.pricePerNight <= maxPriceValue;
+
+                // Amenities filter
+                const selectedAmenities = Array.from(amenitiesSelect.selectedOptions)
+                                              .map(option => option.value);
+                const amenitiesMatch = selectedAmenities.length === 0 || 
+                    selectedAmenities.every(amenity => hotel.amenities.includes(amenity));
+
+                return locationMatch && priceMatch && amenitiesMatch;
+            });
+
+            // Display filtered hotels
+            filteredHotels.forEach(hotel => {
+                const hotelCard = createHotelCard(hotel);
+                hotelsContainer.appendChild(hotelCard);
+            });
+        }
+
+        // Create Hotel Card
+        function createHotelCard(hotel) {
+            const col = document.createElement('div');
+            col.className = 'col-md-6';
+
+            col.innerHTML = `
+                <div class="card hotel-card shadow-sm">
+                    <img src="${hotel.image}" class="card-img-top hotel-image" alt="${hotel.name}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="card-title mb-0">${hotel.name}</h5>
+                            <div>
+                                ${[...Array(Math.floor(hotel.rating))].map(() => 
+                                    `<i class="bi bi-star-fill rating-star"></i>`
+                                ).join('')}
+                                ${hotel.rating % 1 >= 0.5 ? 
+                                    `<i class="bi bi-star-half rating-star"></i>` : ''
+                                }
+                            </div>
+                        </div>
+                        
+                        <p class="card-text text-muted mb-2">
+                            <i class="bi bi-geo-alt me-2"></i>${hotel.location}
+                        </p>
+                        
+                        <div class="mb-3">
+                            ${hotel.amenities.map(amenity => 
+                                `<span class="badge bg-secondary amenity-badge">${amenity}</span>`
+                            ).join('')}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <h6>Room Types</h6>
+                            <div class="btn-group w-100" role="group">
+                                ${hotel.rooms.map(room => `
+                                    <button type="button" 
+                                        class="btn btn-outline-primary" 
+                                        data-hotel-id="${hotel.id}" 
+                                        data-room-type="${room.type}"
+                                        data-room-price="${room.price}"
+                                        data-room-capacity="${room.capacity}">
+                                        ${room.type} - $${room.price}/night
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div id="bookingSummary${hotel.id}" class="d-none">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6>Booking Summary</h6>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Room Type:</span>
+                                        <span id="selectedRoom${hotel.id}"></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Check-in:</span>
+                                        <span id="checkInDate${hotel.id}"></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Check-out:</span>
+                                        <span id="checkOutDate${hotel.id}"></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Guests:</span>
+                                        <span id="guestsCount${hotel.id}"></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between fw-bold">
+                                        <span>Total Price:</span>
+                                        <span id="totalPrice${hotel.id}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-success w-100 mt-3">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Book Hotel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add event listeners to room selection buttons
+            const roomButtons = col.querySelectorAll('[data-room-type]');
+            roomButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active state from all buttons
+                    roomButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    const hotelId = button.getAttribute('data-hotel-id');
+                    const roomType = button.getAttribute('data-room-type');
+                    const roomPrice = button.getAttribute('data-room-price');
+                    const roomCapacity = button.getAttribute('data-room-capacity');
+                    const bookingSummary = document.getElementById(`bookingSummary${hotelId}`);
+                    
+                    // Calculate nights
+                    const nights = checkOutDate.value && checkInDate.value 
+                        ? Math.ceil((new Date(checkOutDate.value) - new Date(checkInDate.value)) / (1000 * 60 * 60 * 24)) 
+                        : 1;
+
+                    // Update booking summary
+                    document.getElementById(`selectedRoom${hotelId}`).textContent = roomType;
+                    document.getElementById(`checkInDate${hotelId}`).textContent = checkInDate.value;
+                    document.getElementById(`checkOutDate${hotelId}`).textContent = checkOutDate.value;
+                    document.getElementById(`guestsCount${hotelId}`).textContent = 
+                        `${adultsCount.value} Adults, ${childrenCount.value} Children`;
+                    
+                    const totalPassengers = parseInt(adultsCount.value) + parseInt(childrenCount.value);
+                    const totalPrice = nights * parseFloat(roomPrice);
+                    document.getElementById(`totalPrice${hotelId}`).textContent = `$${totalPrice}`;
+                    
+                    // Show booking summary
+                    bookingSummary.classList.remove('d-none');
+                });
+            });
+
+            return col;
+        }
+
+        // Event Listeners
+        searchHotelsBtn.addEventListener('click', searchHotels);
+
+        // Set default dates
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        checkInDate.valueAsDate = today;
+        checkOutDate.valueAsDate = tomorrow;
+    </script>
+</body

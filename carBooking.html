@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental Booking System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Arial', sans-serif;
+        }
+        .car-rental-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: 50px;
+        }
+        .car-search-form .form-control, 
+        .car-search-form .btn {
+            border-radius: 5px;
+        }
+        .car-result-card {
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .car-result-card:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+        }
+        .car-image {
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .car-details {
+            padding: 15px;
+        }
+        .car-features {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 15px;
+        }
+        .driver-details-form {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="car-rental-container">
+                    <h2 class="text-center mb-4">
+                        <i class="fas fa-car text-primary me-2"></i>Car Rental Booking
+                    </h2>
+
+                    <!-- Car Rental Search Form -->
+                    <form id="carRentalSearchForm" class="car-search-form">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Pick-up Location</label>
+                                <select class="form-control" id="pickupLocation" required>
+                                    <option value="">Select Pick-up Location</option>
+                                    <option>New Delhi Airport</option>
+                                    <option>Manali Airport</option>
+                                    <option>Kasol Airport</option>
+                                    <option>Mumbai Airport</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Return Location</label>
+                                <select class="form-control" id="returnLocation" required>
+                                    <option value="">Select Return Location</option>
+                                    <option>New Delhi Airport</option>
+                                    <option>Manali Airport</option>
+                                    <option>Kasol Airport</option>
+                                    <option>Mumbai Airport</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Pick-up Date & Time</label>
+                                <input type="datetime-local" class="form-control" id="pickupDateTime" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Return Date & Time</label>
+                                <input type="datetime-local" class="form-control" id="returnDateTime" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Car Type</label>
+                                <select class="form-control" id="carType">
+                                    <option>Economy</option>
+                                    <option>Compact</option>
+                                    <option>Mid-size</option>
+                                    <option>Full-size</option>
+                                    <option>SUV</option>
+                                    <option>Luxury</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Driver's Age</label>
+                                <select class="form-control" id="driverAge">
+                                    <option>18-25</option>
+                                    <option>26-40</option>
+                                    <option>41-60</option>
+                                    <option>60+</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-search me-2"></i>Search Cars
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Search Results Section -->
+                    <div id="carSearchResults" class="mt-4" style="display:none;">
+                        <h3 class="mb-3">Available Cars</h3>
+                        <div id="carResultsList"></div>
+                    </div>
+
+                    <!-- Driver Details Modal -->
+                    <div class="modal fade" id="driverDetailsModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Driver & Booking Details</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="driver-details-form">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Full Name</label>
+                                                <input type="text" class="form-control" placeholder="Enter Full Name" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Email Address</label>
+                                                <input type="email" class="form-control" placeholder="Enter Email" required>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Phone Number</label>
+                                                <input type="tel" class="form-control" placeholder="Enter Phone Number" required>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label class="form-label">Driver's License Number</label>
+                                                <input type="text" class="form-control" placeholder="Enter License Number" required>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="termsAgreement" required>
+                                                    <label class="form-check-label" for="termsAgreement">
+                                                        I agree to the terms and conditions of car rental
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary" id="proceedToPayment">Proceed to Payment</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const carRentalSearchForm = document.getElementById('carRentalSearchForm');
+            const carSearchResults = document.getElementById('carSearchResults');
+            const carResultsList = document.getElementById('carResultsList');
+            const driverDetailsModal = new bootstrap.Modal(document.getElementById('driverDetailsModal'));
+            const proceedToPaymentBtn = document.getElementById('proceedToPayment');
+
+            // Car Rental Search Form Submission
+            carRentalSearchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Mock car rental search results
+                const cars = generateCarResults();
+                displayCarResults(cars);
+            });
+
+            // Generate Mock Car Results
+            function generateCarResults() {
+                return [
+                    {
+                        name: 'Compact Sedan',
+                        type: 'Compact',
+                        pricePerDay: 45,
+                        image: 'https://via.placeholder.com/300x200?text=Compact+Sedan',
+                        features: ['Automatic', '4 Seats', 'Fuel Efficient', 'Bluetooth']
+                    },
+                    {
+                        name: 'Luxury SUV',
+                        type: 'SUV',
+                        pricePerDay: 85,
+                        image: 'https://via.placeholder.com/300x200?text=Luxury+SUV',
+                        features: ['Leather Seats', '7 Seats', 'Navigation', 'Premium Sound']
+                    },
+                    {
+                        name: 'Economy Hatchback',
+                        type: 'Economy',
+                        pricePerDay: 35,
+                        image: 'https://via.placeholder.com/300x200?text=Economy+Hatchback',
+                        features: ['Manual', '4 Seats', 'Great Mileage', 'City Friendly']
+                    }
+                ];
+            }
+
+            // Display Car Search Results
+            function displayCarResults(cars) {
+                carSearchResults.style.display = 'block';
+                carResultsList.innerHTML = '';
+
+                cars.forEach((car, index) => {
+                    const carCard = document.createElement('div');
+                    carCard.classList.add('card', 'car-result-card', 'mb-3');
+                    carCard.innerHTML = `
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="${car.image}" class="img-fluid car-image" alt="${car.name}">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="car-details">
+                                    <h5>${car.name}</h5>
+                                    <p class="text-muted">${car.type} Class</p>
+                                    <div class="car-features">
+                                        <small class="text-muted">
+                                            ${car.features.map(feature => `<span class="badge bg-light text-dark me-2">${feature}</span>`).join('')}
+                                        </small>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <h4 class="text-primary">$${car.pricePerDay}/day</h4>
+                                        <button class="btn btn-success select-car-btn" data-car-index="${index}">
+                                            Select Car
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    carResultsList.appendChild(carCard);
+                });
+
+                // Add event listeners to Select Car buttons
+                document.querySelectorAll('.select-car-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const carIndex = this.getAttribute('data-car-index');
+                        openDriverDetailsModal(cars[carIndex]);
+                    });
+                });
+            }
+
+            // Open Driver Details Modal
+            function openDriverDetailsModal(car) {
+                // You can add additional logic here to pass car details
+                driverDetailsModal.show();
+            }
+
+            // Proceed to Payment
+            proceedToPaymentBtn.addEventListener('click', function() {
+                // Validate form fields
+                const requiredFields = document.querySelectorAll('#driverDetailsModal [required]');
+                let isValid = true;
+
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        isValid = false;
+                        field.classList.add('is-invalid');
+                    } else {
+                        field.classList.remove('is-invalid');
+                    }
+                });
+
+                if (isValid) {
+                    alert('Redirecting to payment gateway...');
+                    driverDetailsModal.hide();
+                } else {
+                    alert('Please fill in all required fields.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

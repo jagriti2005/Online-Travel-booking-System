@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Travel Booking System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Arial', sans-serif;
+        }
+        .booking-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: 30px;
+        }
+        .nav-tabs .nav-link {
+            color: #333;
+            font-weight: bold;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .booking-form .form-control, .booking-form .btn {
+            border-radius: 5px;
+        }
+        .booking-result {
+            margin-top: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .travel-icon {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="booking-container">
+                    <h1 class="text-center mb-4">Online Travel Booking System</h1>
+                    
+                    <!-- Navigation Tabs -->
+                    <ul class="nav nav-tabs nav-fill mb-4" id="bookingTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="flight-tab" data-bs-toggle="tab" data-bs-target="#flight" type="button" role="tab">
+                                <i class="fas fa-plane travel-icon"></i> Flights
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="hotel-tab" data-bs-toggle="tab" data-bs-target="#hotel" type="button" role="tab">
+                                <i class="fas fa-hotel travel-icon"></i> Hotels
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="bus-tab" data-bs-toggle="tab" data-bs-target="#bus" type="button" role="tab">
+                                <i class="fas fa-bus travel-icon"></i> Bus
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="train-tab" data-bs-toggle="tab" data-bs-target="#train" type="button" role="tab">
+                                <i class="fas fa-train travel-icon"></i> Train
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="car-tab" data-bs-toggle="tab" data-bs-target="#car" type="button" role="tab">
+                                <i class="fas fa-car travel-icon"></i> Car Rental
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="bookingTabsContent">
+                        <!-- Flight Booking Tab -->
+                        <div class="tab-pane fade show active" id="flight" role="tabpanel">
+                            <form id="flightBookingForm" class="booking-form">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">From</label>
+                                        <select class="form-control" required>
+                                            <option value="">Select Origin</option>
+                                            <option>New Delhi</option>
+                                            <option>Mumbai</option>
+                                            <option>Varanasi</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">To</label>
+                                        <select class="form-control" required>
+                                            <option value="">Select Destination</option>
+                                            <option>Manali</option>
+                                            <option>Kasol</option>
+                                            <option>Delhi</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Departure Date</label>
+                                        <input type="date" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Passengers</label>
+                                        <select class="form-control">
+                                            <option>1 Passenger</option>
+                                            <option>2 Passengers</option>
+                                            <option>3 Passengers</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg">Search Flights</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Hotel Booking Tab -->
+                        <div class="tab-pane fade" id="hotel" role="tabpanel">
+                            <form id="hotelBookingForm" class="booking-form">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Destination</label>
+                                        <select class="form-control" required>
+                                            <option value="">Select City</option>
+                                            <option>New Delhi</option>
+                                            <option>Mumbai</option>
+                                            <option>Manali</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Check-in Date</label>
+                                        <input type="date" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Check-out Date</label>
+                                        <input type="date" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Rooms</label>
+                                        <select class="form-control">
+                                            <option>1 Room</option>
+                                            <option>2 Rooms</option>
+                                            <option>3 Rooms</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg">Search Hotels</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Bus Booking Tab -->
+                        <div class="tab-pane fade" id="bus" role="tabpanel">
+                            <form id="busBookingForm" class="booking-form">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">From</label>
+                                        <select class="form-control" required>
+                                            <option value="">Select Origin</option>
+                                            <option>New Delji</option>
+                                            <option>Mumbai</option>
+                                            <option>Patna</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">To</label>
+                                        <select class="form-control" required>
+                                            <option value="">Select Destination</option>
+                                            <option>Patna</option>
+                                            <option>Bangalore</option>
+                                            <option>New Delhi</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Travel Date</label>
+                                        <input type="date" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Passengers</label>
+                                        <select class="form-control">
+                                            <option>1 Passenger</option>
+                                            <option>2 Passengers</option>
+                                            <option>3 Passengers</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg">Search Buses</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Train Booking Tab -->
+                        <div class="tab-pane fade" id="train" role="tabpanel">
+                            <form id="trainBookingForm" class="booking-form">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">From</label>
+                                        <select class="form-control" required>
+                                            <option value="">Select Origin</option>
+                                            <option>New Delhi</option>
+                                            <option>Mumbai</option>
+                                            <option>Varanasi</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">To</label>
+                                        <select class="form-control" required>
+                                            <option value="">Select Destination</option>
+                                            <option>Patna</option>
+                                            <option>New Delhi</option>
+                                            <option>Mumbai</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Travel Date</label>
+                                        <input type="date" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Passengers</label>
+                                        <select class="form-control">
+                                            <option>1 Passenger</option>
+                                            <option>2 Passengers</option>
+                                            <option>3 Passengers</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg">Search Trains</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Car Rental Tab -->
+                        <div class="tab-pane fade" id="car" role="tabpanel">
+                            <form id="carRentalForm" class="booking-form">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Pick-up Location</label>
+                                        <select class="form-control" required>
+                                            <option value="">Select Location</option>
+                                            <option>New Delhi Airport</option>
+                                            <option>Mumbai Airport</option>
+                                            <option>Patna Airport</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Pick-up Date</label>
+                                        <input type="date" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Return Location</label>
+                                        <select class="form-control" required>
+                                            <option value="">Select Location</option>
+                                            <option>New Delhi Airport</option>
+                                            <option>Mumbai Airport</option>
+                                            <option>Patna Airport</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Return Date</label>
+                                        <input type="date" class="form-control" required>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg">Search Cars</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Search Results Container -->
+                    <div id="searchResults" class="booking-result" style="display:none;">
+                        <h3 class="text-center mb-4">Search Results</h3>
+                        <div id="resultsList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form submission handlers for each booking type
+            const bookingForms = [
+                'flightBookingForm', 
+                'hotelBookingForm', 
+                'busBookingForm', 
+                'trainBookingForm', 
+                'carRentalForm'
+            ];
+
+            bookingForms.forEach(formId => {
+                const form = document.getElementById(formId);
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const searchResults = document.getElementById('searchResults');
+                    const resultsList = document.getElementById('resultsList');
+                    
+                    // Clear previous results
+                    resultsList.innerHTML = '';
+                    
+                    // Simulate search results based on form type
+                    const results = generateMockResults(formId);
+                    
+                    // Display results
+                    results.forEach(result => {
+                        const resultItem = document.createElement('div');
+                        resultItem.classList.add('card', 'mb-3');
+                        resultItem.innerHTML = `
+                            <div class="card-
